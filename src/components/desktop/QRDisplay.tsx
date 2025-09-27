@@ -50,16 +50,16 @@ export function QRDisplay({ size = 256, className = '', onQRGenerated }: QRDispl
     }
   }, [size, onQRGenerated])
 
-  const refreshQRCode = useCallback(() => {
-    generateQRCode()
-  }, [generateQRCode])
+  // const refreshQRCode = useCallback(() => {
+  //   generateQRCode()
+  // }, [generateQRCode])
 
   useEffect(() => {
     // Get display config and generate initial QR code
     const initializeDisplay = async () => {
       try {
         const config = await apiClient.getDisplayConfig()
-        setRefreshInterval(config.refreshInterval)
+        // setRefreshInterval(config.refreshInterval)
         await generateQRCode()
       } catch (err: unknown) {
         console.error('Failed to initialize display:', err)
@@ -71,13 +71,13 @@ export function QRDisplay({ size = 256, className = '', onQRGenerated }: QRDispl
     initializeDisplay()
   }, []) // Remove generateQRCode dependency to prevent infinite loop
 
-  useEffect(() => {
-    // Set up auto-refresh interval
-    if (refreshInterval > 0) {
-      const interval = setInterval(refreshQRCode, refreshInterval)
-      return () => clearInterval(interval)
-    }
-  }, [refreshInterval, refreshQRCode])
+  // useEffect(() => {
+  //   // Set up auto-refresh interval
+  //   if (refreshInterval > 0) {
+  //     const interval = setInterval(refreshQRCode, refreshInterval)
+  //     return () => clearInterval(interval)
+  //   }
+  // }, [refreshInterval, refreshQRCode])
 
   if (isLoading) {
     return (
@@ -92,7 +92,7 @@ export function QRDisplay({ size = 256, className = '', onQRGenerated }: QRDispl
       <div className={`flex items-center justify-center ${className}`} style={{ width: size, height: size }}>
         <Error 
           message={error}
-          onRetry={refreshQRCode}
+          // onRetry={refreshQRCode}
           className="text-center"
         />
       </div>
@@ -125,15 +125,6 @@ export function QRDisplay({ size = 256, className = '', onQRGenerated }: QRDispl
           <p className="text-sm text-gray-600">
             Display ID: {qrData.displayId.slice(0, 8)}...
           </p>
-          <p className="text-xs text-gray-500">
-            Expires: {new Date(qrData.expiresAt).toLocaleTimeString()}
-          </p>
-          <button
-            onClick={refreshQRCode}
-            className="mt-2 text-xs text-blue-600 hover:text-blue-800 underline"
-          >
-            Refresh QR Code
-          </button>
         </div>
       )}
     </div>

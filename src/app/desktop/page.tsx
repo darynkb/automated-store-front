@@ -6,6 +6,7 @@ import { STORE_INFO } from '@/lib/constants'
 import { QRDisplay, SystemStatus, BilingualInstructions } from '@/components/desktop'
 import { apiClient } from '@/lib/mock-api'
 import type { QRDisplayData, StoreInfo } from '@/lib/mock-api'
+import axios from "axios";
 
 export default function DesktopPage() {
   const { deviceInfo, detectionResult, isLoading: deviceLoading } = useDeviceDetection()
@@ -32,7 +33,7 @@ export default function DesktopPage() {
     fetchStoreInfo()
   }, [])
 
-  const handleQRGenerated = (qrData: QRDisplayData) => {
+  const handleQRGenerated = async (qrData: QRDisplayData) => {
     setCurrentQRData(qrData)
   }
 

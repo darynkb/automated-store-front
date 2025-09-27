@@ -6,6 +6,7 @@ import { useScanState } from '@/hooks/useScanState';
 import { Button } from '@/components/shared/Button';
 import { Loading } from '@/components/shared/Loading';
 import { Error } from '@/components/shared/Error';
+import axios from "axios";
 
 interface QRScannerProps {
   onScanSuccess?: (result: string) => void;
@@ -16,6 +17,7 @@ export function QRScanner({ onScanSuccess, onScanError }: QRScannerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const readerRef = useRef<BrowserMultiFormatReader | null>(null);
   const [isInitializing, setIsInitializing] = useState(false);
+  const [lalaError, setLalaError] = useState<string | null>(null);
 
   const {
     scan,
@@ -39,7 +41,8 @@ export function QRScanner({ onScanSuccess, onScanError }: QRScannerProps) {
   }, []);
 
   // Handle successful scan
-  const handleScan = useCallback((result: string) => {
+  const handleScan = useCallback(async (result: string) => {
+    const resp = await axios.get("https://192.168.8.2:8443/scan");
     handleScanSuccess(result);
     onScanSuccess?.(result);
     stopCamera();
@@ -189,7 +192,7 @@ export function QRScanner({ onScanSuccess, onScanError }: QRScannerProps) {
             <Loading message="Initializing camera..." />
           </div>
         )}
-        
+        {lalaError}
         <video
           ref={videoRef}
           className="w-full h-full object-cover"

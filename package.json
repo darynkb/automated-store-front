@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -H 0.0.0.0",
-    "dev-https": "next dev --experimental-https",
+    "dev-https": "NODE_OPTIONS='--inspect' next dev --experimental-https",
     "dev:mobile": "next dev -H 0.0.0.0 -p 3000",
     "ip": "node scripts/get-local-ip.js",
     "build": "next build",
@@ -19,6 +19,7 @@
   "dependencies": {
     "@types/uuid": "^11.0.0",
     "@zxing/library": "^0.21.3",
+    "axios": "^1.12.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "critters": "^0.0.25",

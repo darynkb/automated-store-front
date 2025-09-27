@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
         success: false,
         error: {
           code: 'PICKUP_FAILED',
-          message: 'Unable to start pickup process'
+          message: 'Unable to start pickup process' 
         },
         timestamp: new Date().toISOString()
       }, { status: 400 });

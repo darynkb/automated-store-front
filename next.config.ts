@@ -1,6 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: "/apii/:path*",
+        destination: "http://192.168.8.2:8001/:path*", // your FastAPI
+      },
+    ];
+  },
   experimental: {
     optimizeCss: true,
   },

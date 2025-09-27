@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { mockDataStore, simulateDelay } from '@/lib/mock-api';
+import { mockDataStore, simulateDelay } from '@/lib/mock-api';             
 
 export async function POST(request: NextRequest) {
   await simulateDelay();
@@ -7,6 +7,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { qrCode } = body;
+    console.log('Received QR code for scanning:', qrCode);
 
     if (!qrCode) {
       return NextResponse.json({

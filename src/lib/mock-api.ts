@@ -44,7 +44,7 @@ export interface QRDisplayData {
   qrCode: string;
   qrCodeUrl: string;
   displayId: string;
-  expiresAt: string;
+  // expiresAt: string;
 }
 
 export interface DisplayConfig {
@@ -203,9 +203,9 @@ class MockDataStore {
   }
 
   generateDisplayQR(): QRDisplayData {
-    const displayId = uuidv4();
+    const displayId = 'kiosk-5678';
     const qrCode = `STORE_001_DISPLAY_${displayId}`;
-    const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString(); // 5 minutes from now
+    // const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString(); // 5 minutes from now
 
     // Add to valid QR codes
     this.validQRCodes.add(qrCode);
@@ -214,7 +214,7 @@ class MockDataStore {
       qrCode,
       qrCodeUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/pickup?code=${qrCode}`,
       displayId,
-      expiresAt
+      // expiresAt
     };
   }
 

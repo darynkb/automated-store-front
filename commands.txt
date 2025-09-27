@@ -1,0 +1,6 @@
+npm run dev-https
+uvicorn main:app --host 192.168.8.2 --port 8443 --ssl-certfile ./192.168.8.2+2.pem --ssl-keyfile ./192.168.8.2+2-key.pem
+
+brew install mkcert
+mkcert -install
+mkcert 192.168.8.2 localhost 127.0.0.1
