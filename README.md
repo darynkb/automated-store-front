@@ -32,7 +32,7 @@ All backend interactions are mocked to return successful responses, making the f
 
 1. **Clone the repository:**
 ```bash
-git clone [https://github.com/darynkb/automated-store-front.git](https://github.com/darynkb/automated-store-front.git)
+git clone https://github.com/darynkb/automated-store-front.git
 cd automated-store-frontend
 ```
 
