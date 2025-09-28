@@ -43,28 +43,29 @@ export function QRScanner({ onScanSuccess, onScanError }: QRScannerProps) {
   // Handle successful scan
   const handleScan = useCallback(async (result: string) => {
     try {
-      console.error(process.env.NEXT_PUBLIC_API_URL + "/scan");
-      const resp = await fetch(process.env.NEXT_PUBLIC_API_URL + "/scan", {
-        method: "GET"
-      });
+      // console.error(process.env.NEXT_PUBLIC_API_URL + "/scan");
+      // const resp = await fetch(process.env.NEXT_PUBLIC_API_URL + "/scan", {
+      //   method: "GET",
+      //   cache: "no-store"
+      // });
 
-      // Read body once, then decide how to parse
-      const contentType = resp.headers.get("content-type") || "";
-      const text = await resp.text();
-      const data = contentType.includes("application/json")
-        ? (() => { try { return JSON.parse(text); } catch { return text; } })()
-        : text;
+      // // Read body once, then decide how to parse
+      // const contentType = resp.headers.get("content-type") || "";
+      // const text = await resp.text();
+      // const data = contentType.includes("application/json")
+      //   ? (() => { try { return JSON.parse(text); } catch { return text; } })()
+      //   : text;
 
-      if (!resp.ok) {
-        // HTTP error (4xx/5xx) — not a thrown exception by fetch
-        console.error(`HTTP ${resp.status} ${resp.statusText} — ${typeof data === "string" ? data.slice(0,200) : JSON.stringify(data).slice(0,200)}`);
-      }
+      // if (!resp.ok) {
+      //   // HTTP error (4xx/5xx) — not a thrown exception by fetch
+      //   console.error(`HTTP ${resp.status} ${resp.statusText} — ${typeof data === "string" ? data.slice(0,200) : JSON.stringify(data).slice(0,200)}`);
+      // }
 
-      // Success
-      console.error("OK:", data);
-      // handleScanSuccess(result);
-      // onScanSuccess?.(result);
-      // stopCamera();
+      // // Success
+      // console.error("OK:", data);
+      handleScanSuccess(result);
+      onScanSuccess?.(result);
+      stopCamera();
     } catch (err: any) {
       let message = "Unexpected error";
       if (err instanceof DOMException && err.name === "AbortError") {
