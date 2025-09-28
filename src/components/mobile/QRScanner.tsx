@@ -6,7 +6,7 @@ import { useScanState } from '@/hooks/useScanState';
 import { Button } from '@/components/shared/Button';
 import { Loading } from '@/components/shared/Loading';
 import { Error } from '@/components/shared/Error';
-import mqtt from 'mqtt';
+import mqtt, { MqttClient } from 'mqtt';
 
 interface QRScannerProps {
   onScanSuccess?: (result: string) => void;
@@ -18,7 +18,8 @@ export function QRScanner({ onScanSuccess, onScanError }: QRScannerProps) {
   const readerRef = useRef<BrowserMultiFormatReader | null>(null);
   const [isInitializing, setIsInitializing] = useState(false);
   const [lalaError, setLalaError] = useState<string | null>(null);
-  const clientRef = useRef<any>(null);
+  const [cliStatus, setCliStatus] = useState<string | null>(null);
+  const clientRef = useRef<MqttClient | null>(null);
 
   const {
     scan,
@@ -34,26 +35,31 @@ export function QRScanner({ onScanSuccess, onScanError }: QRScannerProps) {
   useEffect(() => {
     readerRef.current = new BrowserMultiFormatReader();
     
-    (async () => {
-      const { connect } = await import("mqtt"); // avoid SSR issues
-      // Must be ws:// or wss:// and your broker must enable WebSockets
-      const url = process.env.NEXT_PUBLIC_MQTT_WS_URL!; // e.g. wss://172.20.10.4:8083/mqtt
-      const client = connect(url, {
-        username: process.env.NEXT_PUBLIC_MQTT_USERNAME, // optional
-        password: process.env.NEXT_PUBLIC_MQTT_PASSWORD, // optional
-        reconnectPeriod: 2000,
-        keepalive: 30,
-      });
-      client.on("connect", () => console.log("MQTT connected"));
-      client.on("error", (e: any) => console.error("MQTT error", e?.message));
-      clientRef.current = client;
-      return () => client.end(true);
-    })();
+    const cli = mqtt.connect("wss://172.20.10.12:1883", {
+      connectTimeout: 10_000,
+      keepalive: 60,
+      clean: true,
+      reconnectPeriod: 2_000,  // ms
+      clientId: `web-${Math.random().toString(16).slice(2)}`
+    }); // Replace with your broker details
+    clientRef.current = cli;
+
+    cli.on("connect", () => setCliStatus("connected")); setLalaError("connected");
+    cli.on("reconnect", () => setCliStatus("reconnecting")); setLalaError("reconnecting");
+    cli.on("offline", () => setCliStatus("offline")); setLalaError("offline");
+    cli.on("close", () => setCliStatus("closed")); setLalaError("closed");
+    cli.on("error", (e) => {
+      setCliStatus("error");
+      setLalaError(e?.message ?? String(e));
+      // Do not cli.end() here; it stops auto-reconnect
+    });
 
     return () => {
       if (readerRef.current) {
         readerRef.current.reset();
       }
+      cli.end(true);
+      clientRef.current = null;
     };
   }, []);
 
@@ -65,23 +71,17 @@ export function QRScanner({ onScanSuccess, onScanError }: QRScannerProps) {
         return;
       }
 
-
-      const c = clientRef.current;
-      if (!c || !c.connected) return console.error("MQTT not connected");
-      c.publish("kiosk/pickup/box_request", 1, { qos: 1, retain: false }, (err: any) => {
-        if (err) console.error("Publish failed", err);
-        else {
-          //  console.error("OK:", data);
-          handleScanSuccess(result);
-          onScanSuccess?.(result);
-          stopCamera();
-        }
+      const cli = clientRef.current;
+      if (!cli || cliStatus !== "connected") {
+        setLalaError("Not connected");
+        return;
+      }
+      const msg = JSON.stringify({ t: Date.now(), ok: true });
+      cli.publish("kiosk/pickup/box_request", msg, { qos: 0, retain: false }, (err) => {
+        if (err) setLalaError("Publish error: " + err.message);
       });
-
-      handleScanSuccess(result);
-      onScanSuccess?.(result);
-      stopCamera();
-    } catch (err: any) {
+    } 
+    catch (err: any) {
       let message = "Unexpected error";
       if (err instanceof DOMException && err.name === "AbortError") {
         message = "Request timed out";
