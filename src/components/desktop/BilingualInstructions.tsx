@@ -36,7 +36,7 @@ const instructionSteps: InstructionStep[] = [
   {
     number: 4,
     en: 'Wait for the compartment to open and retrieve your parcel',
-    kz: 'Бөлменің ашылуын күтіп, посылканы алыңыз',
+    kz: 'Қорап бөлмесінің ашылуын күтіп, қорабыңызды алыңыз',
     ru: 'Дождитесь открытия отделения и заберите вашу посылку'
   }
 ]

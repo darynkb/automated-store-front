@@ -10,7 +10,7 @@ describe('BilingualInstructions', () => {
     expect(screen.getByText('Open your mobile device camera or QR scanner app')).toBeInTheDocument()
 
     // Should not show other languages by default
-    expect(screen.queryByText('Сіздің посылканы қалай алу керек')).not.toBeInTheDocument()
+    expect(screen.queryByText('Сіздің сәлемдемеңізді қалай алуға болады')).not.toBeInTheDocument()
     expect(screen.queryByText('Как забрать вашу посылку')).not.toBeInTheDocument()
   })
 
