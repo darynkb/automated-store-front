@@ -76,15 +76,16 @@ export function BilingualInstructions({ className = '', showLanguageToggle = fal
         <div className="flex justify-center">
           <div className="bg-white rounded-lg p-1 shadow-sm border">
             <button
-              onClick={() => setLanguage('en')}
+              onClick={() => setLanguage('kz')}
               className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-                language === 'en' 
+                language === 'kz' 
                   ? 'bg-blue-600 text-white' 
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
-              English
+              Қазақша
             </button>
+            
             <button
               onClick={() => setLanguage('ru')}
               className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
@@ -96,14 +97,14 @@ export function BilingualInstructions({ className = '', showLanguageToggle = fal
               Русский
             </button>
             <button
-              onClick={() => setLanguage('kz')}
+              onClick={() => setLanguage('en')}
               className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-                language === 'kz' 
+                language === 'en' 
                   ? 'bg-blue-600 text-white' 
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
-              Қазақша
+              English
             </button>
           </div>
         </div>
@@ -121,7 +122,7 @@ export function BilingualInstructions({ className = '', showLanguageToggle = fal
         renderInstructions('kz', 'Сіздің посылканы қалай алу керек')
       }
 
-      {/* Additional help section */}
+      {/* Additional help section
       <div className="bg-blue-50 rounded-xl p-6 border border-blue-200">
         <div className="flex items-start space-x-3">
           <div className="text-2xl">💡</div>
@@ -140,7 +141,7 @@ export function BilingualInstructions({ className = '', showLanguageToggle = fal
             </p>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }

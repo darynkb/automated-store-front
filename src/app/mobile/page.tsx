@@ -40,7 +40,7 @@ export default function MobilePage() {
         {/* Header */}
         <div className="text-center mb-8 pt-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Automated Store
+            Automated Parcel Store
           </h1>
           <p className="text-gray-600">
             Mobile QR Scanner Interface

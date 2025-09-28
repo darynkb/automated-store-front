@@ -191,14 +191,14 @@ class MockDataStore {
 
   getStoreInfo(): StoreInfo {
     return {
-      name: 'Automated Store MVP',
-      location: 'Demo Location',
+      name: 'Automated Parcel Store MVP',
+      location: 'EXPO: Demo Location',
       instructions: {
         en: 'Scan the QR code with your mobile device to start the pickup process',
         kz: 'Алу процесін бастау үшін мобильді құрылғыңызбен QR кодын сканерлеңіз'
       },
       operatingHours: '24/7',
-      contactInfo: 'support@automatedstore.demo'
+      contactInfo: 'tactile.servoing@gmail.com'
     };
   }
 

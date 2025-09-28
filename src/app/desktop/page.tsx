@@ -97,21 +97,21 @@ export default function DesktopPage() {
                 <p className="text-gray-600">
                   Use your mobile device to scan the QR code above
                 </p>
-                {currentQRData && (
+                {/* {currentQRData && (
                   <p className="text-xs text-gray-500 mt-2">
                     QR Code refreshes automatically every 30 seconds
                   </p>
-                )}
+                )} */}
               </div>
             </div>
 
             {/* System Status Details */}
-            <div className="bg-white rounded-xl shadow-md p-6">
+            {/* <div className="bg-white rounded-xl shadow-md p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
                 System Status
               </h3>
               <SystemStatus showDetails={true} />
-            </div>
+            </div> */}
           </div>
 
           {/* Instructions */}
@@ -126,23 +126,23 @@ export default function DesktopPage() {
               <div className="space-y-3 text-sm">
                 <div>
                   <span className="text-gray-600">Location:</span>
-                  <p className="font-medium">{displayStoreInfo.location}</p>
+                  <p className="text-blue-600">{displayStoreInfo.location}</p>
                 </div>
                 <div>
                   <span className="text-gray-600">Operating Hours:</span>
-                  <p className="font-medium">{displayStoreInfo.operatingHours}</p>
+                  <p className="text-blue-600">{displayStoreInfo.operatingHours}</p>
                 </div>
                 {storeInfo?.contactInfo && (
                   <div>
                     <span className="text-gray-600">Contact:</span>
-                    <p className="font-medium">{storeInfo.contactInfo}</p>
+                    <p className="text-blue-600">{storeInfo.contactInfo}</p>
                   </div>
                 )}
               </div>
             </div>
 
             {/* Device Info */}
-            <div className="bg-white rounded-xl shadow-md p-6">
+            {/* <div className="bg-white rounded-xl shadow-md p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
                 Display Information
               </h3>
@@ -168,7 +168,7 @@ export default function DesktopPage() {
                   </p>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 

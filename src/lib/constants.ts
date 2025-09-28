@@ -78,7 +78,7 @@ export const SUCCESS_MESSAGES = {
 
 // Store Information
 export const STORE_INFO = {
-  name: 'Automated Store',
+  name: 'Automated Parcel Store',
   location: 'Main Location',
   instructions: {
     en: 'Scan the QR code with your mobile device to start pickup process',

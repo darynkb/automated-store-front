@@ -18,8 +18,8 @@ def read_root():
     return {"Hello": "World"}
 
 
-@app.get("/scan")
-async def read_scan():
+@app.post("/scan")
+async def read_scan(req: Request):
     return {
         "status": "success",
         "message": "Scan processed successfully"

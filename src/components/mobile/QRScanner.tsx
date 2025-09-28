@@ -42,10 +42,27 @@ export function QRScanner({ onScanSuccess, onScanError }: QRScannerProps) {
 
   // Handle successful scan
   const handleScan = useCallback(async (result: string) => {
-    const resp = await axios.get("https://192.168.8.2:8443/scan");
-    handleScanSuccess(result);
-    onScanSuccess?.(result);
-    stopCamera();
+    try {
+      const resp = await axios.post("https://10.101.1.157:8443/scan", {"foo": "bar"});
+      // handleScanSuccess(result);
+      // onScanSuccess?.(result);
+      // stopCamera();
+    } catch (err: any) {
+      setLalaError(err.message)
+      console.error(err.message)
+      console.error(err)
+      if (axios.isAxiosError(err)) {
+        if (err.response) console.error("HTTP", err.message, err.response.status, err.response.data, err.response);
+        else if (err.request) console.error("No response (network/SSL)");  // unlikely now
+        else console.error("Axios error:", err.message);
+      } else {
+        console.error("Unexpected error:", err);
+      }
+    }
+    // const resp = await axios.get("https://10.101.1.157:8443/scan");
+    // handleScanSuccess(result);
+    // onScanSuccess?.(result);
+    // stopCamera();
   }, [handleScanSuccess, onScanSuccess]);
 
   // Handle scan error
