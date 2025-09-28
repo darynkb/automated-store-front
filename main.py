@@ -1,5 +1,4 @@
-from typing import Union
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -18,8 +17,8 @@ def read_root():
     return {"Hello": "World"}
 
 
-@app.post("/scan")
-async def read_scan(req: Request):
+@app.get("/scan")
+async def read_scan():
     return {
         "status": "success",
         "message": "Scan processed successfully"

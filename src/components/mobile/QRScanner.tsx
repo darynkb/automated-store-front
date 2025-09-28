@@ -43,21 +43,40 @@ export function QRScanner({ onScanSuccess, onScanError }: QRScannerProps) {
   // Handle successful scan
   const handleScan = useCallback(async (result: string) => {
     try {
-      const resp = await axios.post("https://10.101.1.157:8443/scan", {"foo": "bar"});
+      console.error(process.env.NEXT_PUBLIC_API_URL + "/scan");
+      const resp = await fetch(process.env.NEXT_PUBLIC_API_URL + "/scan", {
+        method: "GET"
+      });
+
+      // Read body once, then decide how to parse
+      const contentType = resp.headers.get("content-type") || "";
+      const text = await resp.text();
+      const data = contentType.includes("application/json")
+        ? (() => { try { return JSON.parse(text); } catch { return text; } })()
+        : text;
+
+      if (!resp.ok) {
+        // HTTP error (4xx/5xx) — not a thrown exception by fetch
+        console.error(`HTTP ${resp.status} ${resp.statusText} — ${typeof data === "string" ? data.slice(0,200) : JSON.stringify(data).slice(0,200)}`);
+      }
+
+      // Success
+      console.error("OK:", data);
       // handleScanSuccess(result);
       // onScanSuccess?.(result);
       // stopCamera();
     } catch (err: any) {
-      setLalaError(err.message)
-      console.error(err.message)
-      console.error(err)
-      if (axios.isAxiosError(err)) {
-        if (err.response) console.error("HTTP", err.message, err.response.status, err.response.data, err.response);
-        else if (err.request) console.error("No response (network/SSL)");  // unlikely now
-        else console.error("Axios error:", err.message);
-      } else {
-        console.error("Unexpected error:", err);
+      let message = "Unexpected error";
+      if (err instanceof DOMException && err.name === "AbortError") {
+        message = "Request timed out";
+      } else if (err instanceof TypeError) {
+        // fetch network layer: DNS/SSL/CORS/mixed content/PNA, etc.
+        message = `Network/CORS/SSL error: ${err.message}`;
+      } else if (err instanceof Error) {
+        message = err.message;
       }
+      setLalaError(message);
+      console.error("Request failed:", err);
     }
     // const resp = await axios.get("https://10.101.1.157:8443/scan");
     // handleScanSuccess(result);
