@@ -6,7 +6,7 @@ import { useScanState } from '@/hooks/useScanState';
 import { Button } from '@/components/shared/Button';
 import { Loading } from '@/components/shared/Loading';
 import { Error } from '@/components/shared/Error';
-import mqtt, { MqttClient } from 'mqtt';
+import mqtt from 'mqtt';
 
 interface QRScannerProps {
   onScanSuccess?: (result: string) => void;
@@ -18,8 +18,7 @@ export function QRScanner({ onScanSuccess, onScanError }: QRScannerProps) {
   const readerRef = useRef<BrowserMultiFormatReader | null>(null);
   const [isInitializing, setIsInitializing] = useState(false);
   const [lalaError, setLalaError] = useState<string | null>(null);
-  const [cliStatus, setCliStatus] = useState<string | null>(null);
-  const clientRef = useRef<MqttClient | null>(null);
+  const clientRef = useRef<any>(null);
 
   const {
     scan,
@@ -34,32 +33,11 @@ export function QRScanner({ onScanSuccess, onScanError }: QRScannerProps) {
   // Initialize the QR code reader
   useEffect(() => {
     readerRef.current = new BrowserMultiFormatReader();
-    
-    const cli = mqtt.connect("wss://172.20.10.12:1883", {
-      connectTimeout: 10_000,
-      keepalive: 60,
-      clean: true,
-      reconnectPeriod: 2_000,  // ms
-      clientId: `web-${Math.random().toString(16).slice(2)}`
-    }); // Replace with your broker details
-    clientRef.current = cli;
-
-    cli.on("connect", () => setCliStatus("connected")); setLalaError("connected");
-    cli.on("reconnect", () => setCliStatus("reconnecting")); setLalaError("reconnecting");
-    cli.on("offline", () => setCliStatus("offline")); setLalaError("offline");
-    cli.on("close", () => setCliStatus("closed")); setLalaError("closed");
-    cli.on("error", (e) => {
-      setCliStatus("error");
-      setLalaError(e?.message ?? String(e));
-      // Do not cli.end() here; it stops auto-reconnect
-    });
 
     return () => {
       if (readerRef.current) {
         readerRef.current.reset();
       }
-      cli.end(true);
-      clientRef.current = null;
     };
   }, []);
 
@@ -70,18 +48,30 @@ export function QRScanner({ onScanSuccess, onScanError }: QRScannerProps) {
         setLalaError('Invalid QR code format. Please scan a valid code.');
         return;
       }
-
-      const cli = clientRef.current;
-      if (!cli || cliStatus !== "connected") {
-        setLalaError("Not connected");
-        return;
-      }
-      const msg = JSON.stringify({ t: Date.now(), ok: true });
-      cli.publish("kiosk/pickup/box_request", msg, { qos: 0, retain: false }, (err) => {
-        if (err) setLalaError("Publish error: " + err.message);
+      
+      console.error(process.env.NEXT_PUBLIC_API_URL + "/scan");
+      const resp = await fetch(process.env.NEXT_PUBLIC_API_URL + "/scan", {
+        method: "GET"
       });
-    } 
-    catch (err: any) {
+
+      // Read body once, then decide how to parse
+      const contentType = resp.headers.get("content-type") || "";
+      const text = await resp.text();
+      const data = contentType.includes("application/json")
+        ? (() => { try { return JSON.parse(text); } catch { return text; } })()
+        : text;
+
+      if (!resp.ok) {
+        // HTTP error (4xx/5xx) — not a thrown exception by fetch
+        console.error(`HTTP ${resp.status} ${resp.statusText} — ${typeof data === "string" ? data.slice(0,200) : JSON.stringify(data).slice(0,200)}`);
+      }
+
+      // Success
+      console.error("OK:", data);
+      // handleScanSuccess(result);
+      // onScanSuccess?.(result);
+      // stopCamera();
+    } catch (err: any) {
       let message = "Unexpected error";
       if (err instanceof DOMException && err.name === "AbortError") {
         message = "Request timed out";
