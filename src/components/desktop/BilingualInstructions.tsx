@@ -119,7 +119,7 @@ export function BilingualInstructions({ className = '', showLanguageToggle = fal
       }
 
       {language === 'kz' && 
-        renderInstructions('kz', 'Сіздің посылканы қалай алу керек')
+        renderInstructions('kz', 'Сіздің тапсырысыңызды қалай алуға болады')
       }
 
       {/* Additional help section
