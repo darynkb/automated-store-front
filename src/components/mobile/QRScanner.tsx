@@ -49,7 +49,7 @@ export function QRScanner({ onScanSuccess, onScanError }: QRScannerProps) {
         return;
       }
       
-      console.error(process.env.NEXT_PUBLIC_API_URL + "/scan");
+      // console.error(process.env.NEXT_PUBLIC_API_URL + "/scan");
       const resp = await fetch(process.env.NEXT_PUBLIC_API_URL + "/scan", {
         method: "GET"
       });
@@ -67,10 +67,10 @@ export function QRScanner({ onScanSuccess, onScanError }: QRScannerProps) {
       }
 
       // Success
-      console.error("OK:", data);
-      // handleScanSuccess(result);
-      // onScanSuccess?.(result);
-      // stopCamera();
+      // console.error("OK:", data);
+      handleScanSuccess(result);
+      onScanSuccess?.(result);
+      stopCamera();
     } catch (err: any) {
       let message = "Unexpected error";
       if (err instanceof DOMException && err.name === "AbortError") {
