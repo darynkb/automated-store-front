@@ -6,7 +6,7 @@ import { useScanState } from '@/hooks/useScanState';
 import { Button } from '@/components/shared/Button';
 import { Loading } from '@/components/shared/Loading';
 import { Error } from '@/components/shared/Error';
-import axios from "axios";
+import mqtt from 'mqtt';
 
 interface QRScannerProps {
   onScanSuccess?: (result: string) => void;
@@ -18,6 +18,7 @@ export function QRScanner({ onScanSuccess, onScanError }: QRScannerProps) {
   const readerRef = useRef<BrowserMultiFormatReader | null>(null);
   const [isInitializing, setIsInitializing] = useState(false);
   const [lalaError, setLalaError] = useState<string | null>(null);
+  const clientRef = useRef<any>(null);
 
   const {
     scan,
@@ -33,6 +34,22 @@ export function QRScanner({ onScanSuccess, onScanError }: QRScannerProps) {
   useEffect(() => {
     readerRef.current = new BrowserMultiFormatReader();
     
+    (async () => {
+      const { connect } = await import("mqtt"); // avoid SSR issues
+      // Must be ws:// or wss:// and your broker must enable WebSockets
+      const url = process.env.NEXT_PUBLIC_MQTT_WS_URL!; // e.g. wss://172.20.10.4:8083/mqtt
+      const client = connect(url, {
+        username: process.env.NEXT_PUBLIC_MQTT_USERNAME, // optional
+        password: process.env.NEXT_PUBLIC_MQTT_PASSWORD, // optional
+        reconnectPeriod: 2000,
+        keepalive: 30,
+      });
+      client.on("connect", () => console.log("MQTT connected"));
+      client.on("error", (e: any) => console.error("MQTT error", e?.message));
+      clientRef.current = client;
+      return () => client.end(true);
+    })();
+
     return () => {
       if (readerRef.current) {
         readerRef.current.reset();
@@ -43,26 +60,24 @@ export function QRScanner({ onScanSuccess, onScanError }: QRScannerProps) {
   // Handle successful scan
   const handleScan = useCallback(async (result: string) => {
     try {
-      // console.error(process.env.NEXT_PUBLIC_API_URL + "/scan");
-      // const resp = await fetch(process.env.NEXT_PUBLIC_API_URL + "/scan", {
-      //   method: "GET",
-      //   cache: "no-store"
-      // });
+      if (!result.startsWith('STORE_001_DISPLAY_')) {
+        setLalaError('Invalid QR code format. Please scan a valid code.');
+        return;
+      }
 
-      // // Read body once, then decide how to parse
-      // const contentType = resp.headers.get("content-type") || "";
-      // const text = await resp.text();
-      // const data = contentType.includes("application/json")
-      //   ? (() => { try { return JSON.parse(text); } catch { return text; } })()
-      //   : text;
 
-      // if (!resp.ok) {
-      //   // HTTP error (4xx/5xx) — not a thrown exception by fetch
-      //   console.error(`HTTP ${resp.status} ${resp.statusText} — ${typeof data === "string" ? data.slice(0,200) : JSON.stringify(data).slice(0,200)}`);
-      // }
+      const c = clientRef.current;
+      if (!c || !c.connected) return console.error("MQTT not connected");
+      c.publish("kiosk/pickup/box_request", 1, { qos: 1, retain: false }, (err: any) => {
+        if (err) console.error("Publish failed", err);
+        else {
+          //  console.error("OK:", data);
+          handleScanSuccess(result);
+          onScanSuccess?.(result);
+          stopCamera();
+        }
+      });
 
-      // // Success
-      // console.error("OK:", data);
       handleScanSuccess(result);
       onScanSuccess?.(result);
       stopCamera();
@@ -79,10 +94,6 @@ export function QRScanner({ onScanSuccess, onScanError }: QRScannerProps) {
       setLalaError(message);
       console.error("Request failed:", err);
     }
-    // const resp = await axios.get("https://10.101.1.157:8443/scan");
-    // handleScanSuccess(result);
-    // onScanSuccess?.(result);
-    // stopCamera();
   }, [handleScanSuccess, onScanSuccess]);
 
   // Handle scan error
@@ -222,6 +233,12 @@ export function QRScanner({ onScanSuccess, onScanError }: QRScannerProps) {
         QR Code Scanner
       </h2>
 
+      {lalaError && (
+        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
+          {lalaError}
+        </div>
+      )}
+
       {/* Camera View */}
       <div className="relative aspect-square bg-gray-900 rounded-lg overflow-hidden mb-4">
         {isInitializing && (
@@ -229,7 +246,7 @@ export function QRScanner({ onScanSuccess, onScanError }: QRScannerProps) {
             <Loading message="Initializing camera..." />
           </div>
         )}
-        {lalaError}
+        
         <video
           ref={videoRef}
           className="w-full h-full object-cover"
