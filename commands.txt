@@ -8,3 +8,7 @@ mkcert 192.168.8.2 localhost 127.0.0.1
 
 ## 192.168.8.2
 ## /Library/Developer/CommandLineTools/usr/bin/python3 -m uvicorn main:app --host 10.101.1.157 --port 8443 --ssl-certfile ./192.168.8.2+2.pem --ssl-keyfile ./192.168.8.2+2-key.pem
+
+python -m uvicorn main:app --host 172.20.10.4 --port 8008 --ssl-certfile ./172.20.10.4+2.pem --ssl-keyfile ./172.20.10.4+2-key.pem
+mosquitto_sub -h 127.0.0.1 -p 1883 -t 'kiosk/pickup/box_request' -v
+npm run dev-https

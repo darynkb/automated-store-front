@@ -7,7 +7,7 @@ app = FastAPI()
 
 MQTT_HOST = os.getenv("MQTT_HOST", "127.0.0.1")
 MQTT_PORT = int(os.getenv("MQTT_PORT", "1883"))
-MQTT_TOPIC = os.getenv("MQTT_TOPIC", "kiosk/pickup/box_request")
+MQTT_TOPIC = os.getenv("MQTT_TOPIC", "kiosk/pickup/box_delivered")
 mqtt_client = None
 mqtt_connected = False
 
@@ -63,7 +63,7 @@ def read_root():
 @app.get("/scan")
 async def read_scan():
     # 1) публикуем событие в MQTT
-    await mqtt_publish(MQTT_TOPIC, {"event":"scan","status":"processed"}, qos=1)
+    await mqtt_publish(MQTT_TOPIC, {"box_id":"box001"}, qos=1)
 
     # 2) только после успешной публикации — отдаём HTTP-ответ
     return {
