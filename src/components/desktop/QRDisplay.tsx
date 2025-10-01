@@ -120,13 +120,13 @@ export function QRDisplay({ size = 256, className = '', onQRGenerated }: QRDispl
       )}
 
       {/* QR Code info */}
-      {qrData && (
+      {/*qrData && (
         <div className="mt-4 text-center">
           <p className="text-sm text-gray-600">
             Display ID: {qrData.displayId.slice(0, 8)}...
           </p>
         </div>
-      )}
+      )*/}
     </div>
   )
 }

@@ -77,7 +77,7 @@ export function BilingualInstructions({ className = '', showLanguageToggle = fal
           <div className="bg-white rounded-lg p-1 shadow-sm border">
             <button
               onClick={() => setLanguage('kz')}
-              className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+              className={`px-3 py-1 rounded text-m font-medium transition-colors ${
                 language === 'kz' 
                   ? 'bg-blue-600 text-white' 
                   : 'text-gray-600 hover:text-gray-900'
@@ -88,7 +88,7 @@ export function BilingualInstructions({ className = '', showLanguageToggle = fal
             
             <button
               onClick={() => setLanguage('ru')}
-              className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+              className={`px-3 py-1 rounded text-m font-medium transition-colors ${
                 language === 'ru' 
                   ? 'bg-blue-600 text-white' 
                   : 'text-gray-600 hover:text-gray-900'
@@ -98,7 +98,7 @@ export function BilingualInstructions({ className = '', showLanguageToggle = fal
             </button>
             <button
               onClick={() => setLanguage('en')}
-              className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+              className={`px-3 py-1 rounded text-m font-medium transition-colors ${
                 language === 'en' 
                   ? 'bg-blue-600 text-white' 
                   : 'text-gray-600 hover:text-gray-900'

@@ -74,7 +74,7 @@ def main():
     ap.add_argument("--client-id", default=os.getenv("CLIENT_ID", "parcel-bridge"))
     ap.add_argument("--username", default=os.getenv("MQTT_USER"))
     ap.add_argument("--password", default=os.getenv("MQTT_PASS"))
-    ap.add_argument("--serial-port", help="e.g. /dev/ttyUSB0", default="/dev/ttyUSB0")
+    ap.add_argument("--serial-port", help="e.g. /dev/ttyUSB0", default="/dev/ttyUSB1")
     ap.add_argument("--baud", type=int, default=9600)
     ap.add_argument("--debug", action="store_true")
     args = ap.parse_args()

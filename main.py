@@ -7,7 +7,7 @@ app = FastAPI()
 
 MQTT_HOST = os.getenv("MQTT_HOST", "127.0.0.1")
 MQTT_PORT = int(os.getenv("MQTT_PORT", "1883"))
-MQTT_TOPIC = os.getenv("MQTT_TOPIC", "kiosk/pickup/box_delivered")
+MQTT_TOPIC = os.getenv("MQTT_TOPIC", "kiosk/pickup/demo")
 mqtt_client = None
 mqtt_connected = False
 

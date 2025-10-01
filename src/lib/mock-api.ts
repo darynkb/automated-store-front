@@ -191,14 +191,14 @@ class MockDataStore {
 
   getStoreInfo(): StoreInfo {
     return {
-      name: 'Automated Parcel Store MVP',
+      name: 'Robotized Droneport',
       location: 'EXPO: Demo Location',
       instructions: {
         en: 'Scan the QR code with your mobile device to start the pickup process',
         kz: 'Алу процесін бастау үшін мобильді құрылғыңызбен QR кодын сканерлеңіз'
       },
       operatingHours: '24/7',
-      contactInfo: 'tactile.servoing@gmail.com'
+      contactInfo: 'business@mignon-robotics.kz'
     };
   }
 

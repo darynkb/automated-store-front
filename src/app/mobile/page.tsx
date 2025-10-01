@@ -40,7 +40,7 @@ export default function MobilePage() {
         {/* Header */}
         <div className="text-center mb-8 pt-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Automated Parcel Store
+            Robotized Droneport
           </h1>
           <p className="text-gray-600">
             Mobile QR Scanner Interface
@@ -77,7 +77,7 @@ export default function MobilePage() {
         </div>
 
         {/* Debug Info (development only) */}
-        {process.env.NODE_ENV === 'development' && (
+        {/* {process.env.NODE_ENV === 'development' && (
           <div className="mt-6 bg-gray-100 rounded-lg p-4">
             <h3 className="font-semibold text-gray-900 mb-2 text-sm">
               Debug Info:
@@ -97,7 +97,7 @@ export default function MobilePage() {
               </div>
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   )

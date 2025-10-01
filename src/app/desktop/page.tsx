@@ -57,14 +57,14 @@ export default function DesktopPage() {
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-3xl font-bold text-gray-900">
                 {displayStoreInfo.name}
               </h1>
-              <p className="text-gray-600">{displayStoreInfo.location}</p>
+              {/* <p className="text-m text-gray-600">{displayStoreInfo.location}</p> */}
             </div>
             <div className="text-right">
               <SystemStatus showDetails={false} />
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-xl text-gray-600 mt-1">
                 Operating: {displayStoreInfo.operatingHours}
               </p>
             </div>
@@ -77,26 +77,26 @@ export default function DesktopPage() {
           {/* QR Code Display */}
           <div className="text-center">
             <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                Scan to Start Pickup
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                Scan to Pickup
               </h2>
               
               {/* QR Code */}
               <div className="flex justify-center mb-6">
                 <QRDisplay 
-                  size={280}
+                  size={330}
                   onQRGenerated={handleQRGenerated}
                   className="mx-auto"
                 />
               </div>
 
               <div className="text-center">
-                <p className="text-lg font-medium text-gray-900 mb-2">
+                {/*<p className="text-lg font-medium text-gray-900 mb-2">
                   Ready for Pickup
-                </p>
-                <p className="text-gray-600">
+                </p>*/}
+                {/* <p className="text-xl text-gray-600">
                   Use your mobile device to scan the QR code above
-                </p>
+                </p> */}
                 {/* {currentQRData && (
                   <p className="text-xs text-gray-500 mt-2">
                     QR Code refreshes automatically every 30 seconds
@@ -120,21 +120,21 @@ export default function DesktopPage() {
 
             {/* Store Information */}
             <div className="bg-white rounded-xl shadow-md p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">
                 Store Information
               </h3>
-              <div className="space-y-3 text-sm">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start space-y-3 text-sm">
                 <div>
-                  <span className="text-gray-600">Location:</span>
+                  <span className="text-lg text-gray-600">Location:</span>
                   <p className="text-blue-600">{displayStoreInfo.location}</p>
                 </div>
-                <div>
+                {/* <div>
                   <span className="text-gray-600">Operating Hours:</span>
                   <p className="text-blue-600">{displayStoreInfo.operatingHours}</p>
-                </div>
+                </div> */}
                 {storeInfo?.contactInfo && (
                   <div>
-                    <span className="text-gray-600">Contact:</span>
+                    <span className="text-lg text-gray-600">Contact:</span>
                     <p className="text-blue-600">{storeInfo.contactInfo}</p>
                   </div>
                 )}
@@ -173,7 +173,7 @@ export default function DesktopPage() {
         </div>
 
         {/* Debug Info (development only) */}
-        {process.env.NODE_ENV === 'development' && (
+        {/* {process.env.NODE_ENV === 'development' && (
           <div className="mt-12 bg-gray-100 rounded-lg p-6">
             <h3 className="font-semibold text-gray-900 mb-4">
               Debug Information:
@@ -195,7 +195,7 @@ export default function DesktopPage() {
               )}
             </div>
           </div>
-        )}
+        )} */}
       </main>
     </div>
   )
